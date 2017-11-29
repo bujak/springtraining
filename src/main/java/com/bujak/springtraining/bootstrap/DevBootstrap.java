@@ -2,8 +2,10 @@ package com.bujak.springtraining.bootstrap;
 
 import com.bujak.springtraining.model.Author;
 import com.bujak.springtraining.model.Book;
+import com.bujak.springtraining.model.Publisher;
 import com.bujak.springtraining.repository.AuthorRepository;
 import com.bujak.springtraining.repository.BookRepository;
+import com.bujak.springtraining.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -14,11 +16,12 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>{
 
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
+    private PublisherRepository publisherRepository;
 
-//    @Autowired
-    public DevBootstrap(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public DevBootstrap(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -27,12 +30,20 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>{
     }
 
     private void initData() {
-        Author knaak = new Author("Richard A.", "Knaak");
-        Author sapkowski = new Author("Andrzej", "Sapkowski");
-        Book witcher1 = new Book("The Last wish", "ISBN 83-7054-061-9", "SuperNOWA");
-        Book dayOfDragon = new Book("Day of the Dragon", "ISBN 0671041525", "ISA");
-        Book witcher2 = new Book("Sword of destiny", "ISBN 83-7054-037-6", "SuperNOWA");
 
+        Publisher superNowa = new Publisher("SuperNOWA", "Warszawa");
+        publisherRepository.save(superNowa);
+        Publisher isa = new Publisher("ISA", "Warszawa");
+        publisherRepository.save(isa);
+
+        Author knaak = new Author("Richard A.", "Knaak");
+        authorRepository.save(knaak);
+        Author sapkowski = new Author("Andrzej", "Sapkowski");
+        authorRepository.save(sapkowski);
+
+        Book witcher1 = new Book("The Last wish", "ISBN 83-7054-061-9", superNowa);
+        Book dayOfDragon = new Book("Day of the Dragon", "ISBN 0671041525", isa);
+        Book witcher2 = new Book("Sword of destiny", "ISBN 83-7054-037-6", superNowa);
 
         sapkowski.getBooks().add(witcher1);
         sapkowski.getBooks().add(witcher2);
@@ -41,10 +52,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>{
         knaak.getBooks().add(dayOfDragon);
         dayOfDragon.getAuthors().add(knaak);
 
-        authorRepository.save(knaak);
-        authorRepository.save(sapkowski);
         bookRepository.save(dayOfDragon);
         bookRepository.save(witcher1);
         bookRepository.save(witcher2);
+
     }
 }
