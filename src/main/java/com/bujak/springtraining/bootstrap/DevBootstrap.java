@@ -37,9 +37,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>{
         publisherRepository.save(isa);
 
         Author knaak = new Author("Richard A.", "Knaak");
-        authorRepository.save(knaak);
         Author sapkowski = new Author("Andrzej", "Sapkowski");
-        authorRepository.save(sapkowski);
 
         Book witcher1 = new Book("The Last wish", "ISBN 83-7054-061-9", superNowa);
         Book dayOfDragon = new Book("Day of the Dragon", "ISBN 0671041525", isa);
@@ -52,6 +50,8 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent>{
         knaak.getBooks().add(dayOfDragon);
         dayOfDragon.getAuthors().add(knaak);
 
+        authorRepository.save(knaak);
+        authorRepository.save(sapkowski);
         bookRepository.save(dayOfDragon);
         bookRepository.save(witcher1);
         bookRepository.save(witcher2);
